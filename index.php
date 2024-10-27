@@ -11,15 +11,16 @@
   <div class="header">
     <div></div>
     <div class="buttons">
-      <button class="button">Login</button>
-      <button class="button">Sign up</button>
+    <form action="login.php" method="get" style="display:inline;">
+    <button type="submit" class="button">Login</button>
+    </form>
+    <form action="signup.php" method="get" style="display:inline;">
+    <button type="submit" class="button">Sign up</button>
+    </form>
     </div>
   </div>
-
   <div class="main">
     <div class="title">WELCOME TO TRAVEL HUB</div>
   </div>
-
-
 </body>
 </html>
