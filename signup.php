@@ -1,52 +1,27 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "projectdbms";
-$port = 3306;
-
-// Establish a database connection
-$con = new mysqli($servername, $username, $password, $dbname, $port);
-
-// Check for connection errors
-if ($con->connect_error) {
-  die("Connection failed: " . $con->connect_error);
+$servername="localhost";
+$username="root";
+$password="";
+$dbname="projectdbms";
+$con= new mysqli($servername,$username,$password,$dbname);
+ 
+if(!$con){
+  die("Connection failed: ". mysqli_connect_error());
 }
+$submitted=false;
+if($_SERVER["REQUEST_METHOD"]=="POST")
+{
+  $Username=$_POST['username'];
+  $email=$_POST['email'];
+  $Password=$_POST['password'];
+  $sql="INSERT INTO USERINFO(username,emailid,password) VALUES ('$Username','$email','$Password')";
 
-$submitted = false;
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  // Sanitize inputs and hash password
-  $Username = mysqli_real_escape_string($con, trim($_POST['username']));
-  $email = mysqli_real_escape_string($con, trim($_POST['email']));
-  $Password = mysqli_real_escape_string($con, trim($_POST['password']));
-  $hashedPassword = password_hash($Password, PASSWORD_DEFAULT);
-
-  // Prepare SQL with placeholders
-  $stmt = $con->prepare("INSERT INTO `USERINFO` (`Username`, `emailid`, `Password`) VALUES (?, ?, ?)");
-
-  if ($stmt === false) {
-    echo "Failed to prepare statement: " . htmlspecialchars($con->error);
-    exit();
-  }
-
-  // Bind the parameters
-  $stmt->bind_param("sss", $Username, $email, $hashedPassword);
-
-  // Execute the statement
-  if ($stmt->execute()) {
-    $submitted = true;
-  } else {
-    // Check for duplicate entry error
-    if ($con->errno === 1062) {
-      echo "Error: Duplicate entry. The username or email already exists.";
-    } else {
-      echo "Error executing statement: " . htmlspecialchars($stmt->error);
-    }
-  }
-
-  $stmt->close();
+if($con->query($sql) === TRUE){
+  $submitted = true; // Set to true on successful submission
 }
+else{
+  echo "Error: " . $sql . "<br>" . $con->error;
+}}
 
 $con->close();
 ?>
@@ -80,8 +55,8 @@ $con->close();
       <label for="password">Password:</label>
       <input type="password" id="password" name="password" required>
       <button type="submit" class="button">Sign Up</button>
+      <button type="Back" class="button" onclick="window.location.href='index.php'">Back</button>
     </form>
-    <a href="index.php" class="button">Back</a>
     </div>
   </div>
 </body>
