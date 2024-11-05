@@ -32,7 +32,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['logout'])) {
           <button type="submit" name="logout" class="menu-button bg-red-500 text-white p-2 rounded-md w-full hover:bg-red-600">Logout</button>
       </form>
     </nav>
-    <div class="flex-grow p-6">
+    <div class="flex-grow p-6  bg-blue-200">
+    <div class="w-full max-w-md bg-white p-4 rounded-lg shadow-lg">
+        <h2 class="text-xl font-bold text-center mb-4 text-blue-700">Cancel</h2>
+        <form method="POST" action="">
+            <label class="block text-gray-700 font-semibold mb-1">Booking Details: </label>
+            <input type="text" name="Name" class="w-full px-3 py-1 mb-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your name" required>
+
+            <label class="block text-gray-700 font-semibold mb-1">Booking No: </label>
+            <input type="email" name="Email" class="w-full px-3 py-1 mb-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your email" required>
+            
+            <button type="submit" class="w-full bg-red-500 text-white font-bold py-2 rounded-lg hover:bg-orange-600">Delete</button>
+        </form>
+
       <table class="min-w-full bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg">
         <thead>
           <tr class="bg-gray-700">

@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['logout'])) {
   <div class="bg-blue-600 p-6">
     <h1 class="text-white text-3xl font-bold text-center">TRAVEL HUB</h1>
   </div>
-  <div class="flex h-screen">
+  <div class="flex h-screen bg-blue-200">
     <nav class="bg-blue-500 w-64 p-4 flex flex-col items-center">
       <button class="menu-button bg-red-500 text-white font-bold p-2 rounded-md w-full mb-2 hover:bg-red-600 border-2 border-transparent active:border-black" onclick="location.href='Homepage.php'">Home</button>
       <button class="menu-button bg-red-500 text-white font-bold p-2 rounded-md w-full mb-2 hover:bg-red-600 border-2 border-transparent active:border-black" onclick="location.href='Book.php'">Book</button>

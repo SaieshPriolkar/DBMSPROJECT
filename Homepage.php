@@ -32,7 +32,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['logout'])) {
           <button type="submit" name="logout" class="menu-button bg-red-500 text-white p-2 rounded-md w-full hover:bg-red-600">Logout</button>
       </form>
     </nav>
-    <div class="flex-grow p-6">
+    <div class="flex-grow p-6 bg-blue-200">
+    <div class="mb-4">
+    <h2 class="text-black text-2xl font-bold">Submitted Booking</h2>
+    </div>
       <table class="min-w-full bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg">
         <thead>
           <tr class="bg-gray-700">
@@ -62,11 +65,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['logout'])) {
               die("Connection failed: " . $con->connect_error);
           }
 
-          $sql = "SELECT * FROM TRAVELER NATURAL JOIN DESTINATION NATURAL JOIN TRANSPORT NATURAL JOIN BOOKINGDETAILS";
+          $sql = "SELECT * FROM  Traveler NATURAL JOIN destination NATURAL JOIN transport NATURAL JOIN bookingdetails";
           $result = $con->query($sql);
-
+          if (!$result) {
+              echo "Error: " . $con->error; // Add error handling here
+          }
           if ($result->num_rows > 0) {
-              while ($row = $result->fetch_assoc()) {
+              while ($row = mysqli_fetch_assoc($result)) {
                   echo "<tr class='hover:bg-gray-600'>
                           <td class='py-2 px-4 border-b border-gray-600'>" . htmlspecialchars($row['BookingNo']) . "</td>
                           <td class='py-2 px-4 border-b border-gray-600'>" . htmlspecialchars($row['Name']) . "</td>
@@ -85,7 +90,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['logout'])) {
           } else {
               echo "<tr><td colspan='9' class='text-center py-2'>No records found</td></tr>";
           }
-          $con->close();
           ?>
         </tbody>
       </table>

@@ -1,6 +1,51 @@
 <?php
-// TABLE DISPLAY PAGE 
 session_start();
+$servername="localhost";
+$username="root";
+$password="";
+$dbname="projectdbms";
+$con= new mysqli($servername,$username,$password,$dbname);
+ 
+if(!$con){
+  die("Connection failed: ". mysqli_connect_error());
+}
+$submitted=false;
+if($_SERVER["REQUEST_METHOD"]=="POST")
+{
+  $Name=$_POST['Name'];
+  $Email=$_POST['Email'];
+  $Destination=$_POST['Destination'];
+  $Start=$_POST['Start_Date'];
+  $End=$_POST['End_Date'];
+  $Seats=$_POST['Seats'];
+  $Mode=$_POST['Mode'];
+  $sql="INSERT INTO Traveler (`Name`,`Email`,`Destination`,`Start_Date`,End_Date,`Seats`,`Mode`) VALUES ('$Name','$Email','$Destination','$Start','$End','$Seats','$Mode')";
+  if($con->query($sql) === TRUE) {
+    $BookingNo = $con->insert_id;  // Get the last inserted BookingNo
+    $submitted = true;
+
+    // Insert into bookingdetails table
+    $sqlDetails = "INSERT INTO BookingDetails (BookingNo, total_price)
+    SELECT 
+        t.BookingNo,
+        t.Seats * d.priceperperson + t.Seats * tr.Ticketperperson AS total_price
+    FROM 
+        Traveler t
+    NATURAL JOIN 
+        Destination d
+    NATURAL JOIN 
+        Transport tr;
+";
+    if(!$con->query($sqlDetails)) {
+        echo "Error adding to bookingdetails: " . $con->error;
+    }
+} else {
+    echo "Error: " . $sql . "<br>" . $con->error;
+}
+}
+
+$con->close();
+
 // LOGOUT CODE 
 // Check if the logout action has been requested
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['logout'])) {
@@ -36,38 +81,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['logout'])) {
     <div class="w-full max-w-md bg-white p-4 rounded-lg shadow-lg">
         <h2 class="text-xl font-bold text-center mb-4 text-blue-700">BOOK</h2>
         
-        <!-- Name Field -->
-        <label class="block text-gray-700 font-semibold mb-1">Name:</label>
-        <input type="text" class="w-full px-3 py-1 mb-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your name">
+        <!-- Book Form -->
+        <form method="POST" action="">
+            <!-- Name Field -->
+            <label class="block text-gray-700 font-semibold mb-1">Name:</label>
+            <input type="text" name="Name" class="w-full px-3 py-1 mb-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your name" required>
 
-        <!-- Email Field -->
-        <label class="block text-gray-700 font-semibold mb-1">Email:</label>
-        <input type="email" class="w-full px-3 py-1 mb-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your email">
+            <!-- Email Field -->
+            <label class="block text-gray-700 font-semibold mb-1">Email:</label>
+            <input type="email" name="Email" class="w-full px-3 py-1 mb-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your email" required>
 
-        <!-- Destination Field -->
-        <label class="block text-gray-700 font-semibold mb-1">Destination:</label>
-        <input type="text" class="w-full px-3 py-1 mb-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter destination">
+            <!-- Destination Field -->
+            <label class="block text-gray-700 font-semibold mb-1">Destination:</label>
+            <input type="text" name="Destination" class="w-full px-3 py-1 mb-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter destination" required>
 
-        <!-- Start Date Field -->
-        <label class="block text-gray-700 font-semibold mb-2">Start:</label>
-        <input type="date" class="w-full px-3 py-1 mb-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <!-- Start Date Field -->
+            <label class="block text-gray-700 font-semibold mb-2">Start:</label>
+            <input type="date" name="Start_Date" class="w-full px-3 py-1 mb-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
 
-        <!-- End Date Field -->
-        <label class="block text-gray-700 font-semibold mb-2">End:</label>
-        <input type="date" class="w-full px-3 py-1 mb-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <!-- End Date Field -->
+            <label class="block text-gray-700 font-semibold mb-2">End:</label>
+            <input type="date" name="End_Date" class="w-full px-3 py-1 mb-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
 
-        <!-- Number of Travelers Field -->
-        <label class="block text-gray-700 font-semibold mb-1">No. of Travelers:</label>
-        <input type="number" class="w-full px-3 py-1 mb-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter number of travelers">
+            <!-- Number of Travelers Field -->
+            <label class="block text-gray-700 font-semibold mb-1">No. of Travelers:</label>
+            <input type="number" name="Seats" class="w-full px-3 py-1 mb-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter number of travelers" required>
 
-        <!-- Mode Field -->
-        <label class="block text-gray-700 font-semibold mb-1">Mode:</label>
-        <input type="text" class="w-full px-3 py-1 mb-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter mode of travel">
+            <!-- Mode Field -->
+            <label class="block text-gray-700 font-semibold mb-1">Mode:</label>
+            <input type="text" name="Mode" class="w-full px-3 py-1 mb-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter mode of travel" required>
 
-        <!-- Book Button -->
-        <button class="w-full bg-red-500 text-white font-bold py-2 rounded-lg hover:bg-orange-600">Book</button>
+            <!-- Book Button -->
+            <button type="submit" class="w-full bg-red-500 text-white font-bold py-2 rounded-lg hover:bg-orange-600">Book</button>
+        </form>
+        
+        <?php if ($submitted): ?>
+            <p class="text-green-600 text-center mt-4">Booking submitted successfully!</p>
+        <?php endif; ?>
     </div>
-</div>
+    </div>
     </div>
   </div>
 </body>
