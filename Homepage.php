@@ -1,24 +1,6 @@
 <?php
-//TABLE DISPLAY PAGE 
+// TABLE DISPLAY PAGE 
 session_start();
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "projectdbms";
-
-$con = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($con->connect_error) {
-    die("Connection failed: " . $con->connect_error);
-}
-$sql = "SELECT * FROM  USERINFO";
-$result = mysqli_query($con, $sql);
-
-if (!$result) {
-    die("Query failed: " . mysqli_error($con)); 
-}
-
 // LOGOUT CODE 
 // Check if the logout action has been requested
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['logout'])) {
@@ -34,27 +16,74 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['logout'])) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Travel Hub</title>
-  <link rel="stylesheet" href="Homepage.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-  <div class="header">
-    <h1>TRAVEL HUB</h1>
+<body class="bg-gray-100">
+  <div class="bg-blue-600 p-6">
+    <h1 class="text-white text-3xl font-bold text-center">TRAVEL HUB</h1>
   </div>
-  <div class="container">
-    <nav class="sidebar">
-      <button class="menu-button active">Home</button>
-      <button class="menu-button">Book</button>
-      <button class="menu-button">Cancel</button>
-      <button class="menu-button">Change</button>
-      <form method="POST" style="display: inline;">
-          <button type="submit" name="logout" class="menu-button">Logout</button>
+  <div class="flex h-screen">
+    <nav class="bg-blue-500 w-64 p-4 flex flex-col items-center">
+      <button class="menu-button bg-orange-500 text-black p-2 rounded-md w-full mb-2 hover:bg-orange-600 border-2 border-transparent active:border-black" onclick="location.href='Homepage.php'">Home</button>
+      <button class="menu-button bg-orange-500 text-black p-2 rounded-md w-full mb-2 hover:bg-orange-600 border-2 border-transparent active:border-black" onclick="location.href='Book.php'">Book</button>
+      <button class="menu-button bg-orange-500 text-black p-2 rounded-md w-full mb-2 hover:bg-orange-600 border-2 border-transparent active:border-black" onclick="location.href='Cancel.php'">Cancel</button>
+      <button class="menu-button bg-orange-500 text-black p-2 rounded-md w-full mb-2 hover:bg-orange-600 border-2 border-transparent active:border-black" onclick="location.href='Change.php'">Change</button>
+      <form method="POST" class="w-full">
+          <button type="submit" name="logout" class="menu-button bg-red-500 text-white p-2 rounded-md w-full hover:bg-red-600">Logout</button>
       </form>
     </nav>
-    <div class="content">
-      <h2>HELLO</h2>
-    </div>
-    
-  </div>
+    <div class="flex-grow p-6">
+      <table class="min-w-full bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg">
+        <thead>
+          <tr class="bg-gray-700">
+            <th class="py-3 px-4 border-b border-gray-600">BookingNo</th>
+            <th class="py-3 px-4 border-b border-gray-600">Name</th>
+            <th class="py-3 px-4 border-b border-gray-600">Email</th>
+            <th class="py-3 px-4 border-b border-gray-600">Destination</th>
+            <th class="py-3 px-4 border-b border-gray-600">Start Date</th>
+            <th class="py-3 px-4 border-b border-gray-600">End Date</th>
+            <th class="py-3 px-4 border-b border-gray-600">Seats</th>
+            <th class="py-3 px-4 border-b border-gray-600">Mode</th>
+            <th class="py-3 px-4 border-b border-gray-600">Price/person</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          $servername = "localhost";
+          $username = "root";
+          $password = "";
+          $dbname = "projectdbms";
+          $con = new mysqli($servername, $username, $password, $dbname);
 
+          if ($con->connect_error) {
+              die("Connection failed: " . $con->connect_error);
+          }
+
+          $sql = "SELECT * FROM TRAVELER NATURAL JOIN DESTINATION";
+          $result = $con->query($sql);
+
+          if ($result->num_rows > 0) {
+              while ($row = $result->fetch_assoc()) {
+                  echo "<tr class='hover:bg-gray-600'>
+                          <td class='py-2 px-4 border-b border-gray-600'>" . htmlspecialchars($row['BookingNo']) . "</td>
+                          <td class='py-2 px-4 border-b border-gray-600'>" . htmlspecialchars($row['Name']) . "</td>
+                          <td class='py-2 px-4 border-b border-gray-600'>" . htmlspecialchars($row['Email']) . "</td>
+                          <td class='py-2 px-4 border-b border-gray-600'>" . htmlspecialchars($row['Destination']) . "</td>
+                          <td class='py-2 px-4 border-b border-gray-600'>" . htmlspecialchars($row['Start_Date']) . "</td>
+                          <td class='py-2 px-4 border-b border-gray-600'>" . htmlspecialchars($row['End_Date']) . "</td>
+                          <td class='py-2 px-4 border-b border-gray-600'>" . htmlspecialchars($row['Seats']) . "</td>
+                          <td class='py-2 px-4 border-b border-gray-600'>" . htmlspecialchars($row['Mode']) . "</td>
+                          <td class='py-2 px-4 border-b border-gray-600'>" . htmlspecialchars($row['priceperperson']) . "</td>
+                        </tr>";
+              }
+          } else {
+              echo "<tr><td colspan='9' class='text-center py-2'>No records found</td></tr>";
+          }
+          $con->close();
+          ?>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </body>
 </html>
