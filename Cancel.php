@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['logout'])) {
                           <td class='py-2 px-4 border-b border-gray-600'>" . htmlspecialchars($row['priceperperson']) . "</td>
                           <td class='py-2 px-4 border-b border-gray-600'>" . htmlspecialchars($row['Ticketperperson']) . "</td>
                            <td class='py-2 px-4 border-b border-gray-600'>" . htmlspecialchars($row['booking_detail_id']) . "</td>
-                          <td class='py-2 px-4 border-b border-gray-600'>" . htmlspecialchars($row['total_price']) . "</td>
+                           <td class='py-2 px-4 border-b border-gray-600'>" . htmlspecialchars($row['total_price']) . "</td>
                         </tr>";
               }
           } else {
