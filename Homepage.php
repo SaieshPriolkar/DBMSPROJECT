@@ -28,14 +28,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['logout'])) {
       <button class="menu-button bg-red-500 text-white font-bold p-2 rounded-md w-full mb-2 hover:bg-red-600 border-2 border-transparent active:border-black" onclick="location.href='Book.php'">Book</button>
       <button class="menu-button bg-red-500 text-white font-bold p-2 rounded-md w-full mb-2 hover:bg-red-600 border-2 border-transparent active:border-black" onclick="location.href='Cancel.php'">Cancel</button>
       <button class="menu-button bg-red-500 text-white font-bold p-2 rounded-md w-full mb-2 hover:bg-red-600 border-2 border-transparent active:border-black" onclick="location.href='Change.php'">Change</button>
+      <button class="menu-button bg-red-500 text-white font-bold p-2 rounded-md w-full mb-2 hover:bg-red-600 border-2 border-transparent active:border-black" onclick="location.href='Plans.php'">Plans</button>
       <form method="POST" class="w-full">
           <button type="submit" name="logout" class="menu-button bg-red-500 text-white p-2 rounded-md w-full hover:bg-red-600">Logout</button>
       </form>
     </nav>
     <div class="flex-grow p-6 bg-blue-200">
-    <div class="mb-4">
-    <h2 class="text-black text-2xl font-bold">Submitted Booking</h2>
-    </div>
+     <div class="mb-4">
+     <h2 class="text-black text-2xl font-bold">Submitted Booking</h2>
+     </div>
       <table class="min-w-full bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg">
         <thead>
           <tr class="bg-gray-700">

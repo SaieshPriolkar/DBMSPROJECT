@@ -25,7 +25,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST")
     $submitted = true;
 
     // Insert into bookingdetails table
-    $sqlDetails = "INSERT INTO BookingDetails (BookingNo, total_price)
+    $sqlDetails =  " INSERT INTO BookingDetails (BookingNo, total_price)
     SELECT 
         t.BookingNo,
         t.Seats * d.priceperperson + t.Seats * tr.Ticketperperson AS total_price
@@ -34,7 +34,11 @@ if($_SERVER["REQUEST_METHOD"]=="POST")
     NATURAL JOIN 
         Destination d
     NATURAL JOIN 
-        Transport tr;
+        Transport tr
+    LEFT JOIN 
+        BookingDetails b ON t.BookingNo = b.BookingNo
+    WHERE 
+        b.BookingNo IS NULL;
 ";
     if(!$con->query($sqlDetails)) {
         echo "Error adding to bookingdetails: " . $con->error;
@@ -73,6 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['logout'])) {
       <button class="menu-button bg-red-500 text-white font-bold p-2 rounded-md w-full mb-2 hover:bg-red-600 border-2 border-transparent active:border-black" onclick="location.href='Book.php'">Book</button>
       <button class="menu-button bg-red-500 text-white font-bold p-2 rounded-md w-full mb-2 hover:bg-red-600 border-2 border-transparent active:border-black" onclick="location.href='Cancel.php'">Cancel</button>
       <button class="menu-button bg-red-500 text-white font-bold p-2 rounded-md w-full mb-2 hover:bg-red-600 border-2 border-transparent active:border-black" onclick="location.href='Change.php'">Change</button>
+      <button class="menu-button bg-red-500 text-white font-bold p-2 rounded-md w-full mb-2 hover:bg-red-600 border-2 border-transparent active:border-black" onclick="location.href='Plans.php'">Plans</button>
       <form method="POST" class="w-full" >
           <button type="submit" name="logout" class="menu-button bg-red-500 text-white p-2 rounded-md w-full hover:bg-red-600">Logout</button>
       </form>
