@@ -7,45 +7,32 @@ $username = "root";
 $password = "";
 $dbname = "projectdbms";
 $con = new mysqli($servername, $username, $password, $dbname);
-$submitted = false;
-
+$submitted=false;
 if ($con->connect_error) {
     die("Connection failed: " . $con->connect_error);
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['booking_detail_id']) && isset($_POST['BookingNo'])) {
-        $BookingDetailsNo = $_POST['booking_detail_id'];
-        $BookingNo = $_POST['BookingNo'];
+  if (isset($_POST['booking_detail_id']) && isset($_POST['BookingNo'])) {
+      $BookingDetailsNo = $_POST['booking_detail_id'];
+      $BookingNo = $_POST['BookingNo'];
 
-        // Prepare the SQL statement
-        $sql = "DELETE BOOKINGDETAILS 
-                FROM BOOKINGDETAILS 
-                NATURAL JOIN TRAVELER 
-                WHERE BOOKINGDETAILS.booking_detail_id = ? 
-                  AND Traveler.BookingNo = ?";
-
-        // Prepare the statement
-        $stmt = $con->prepare($sql);
-        if ($stmt === false) {
-            die("Error preparing statement: " . $con->error);
-        }
-
-        // Bind parameters (both should be integers)
-        $stmt->bind_param("ii", $BookingDetailsNo, $BookingNo);
-
-        // Execute the query
-        if ($stmt->execute()) {
-            $submitted = true; // Set to true on successful deletion
-        } else {
-            echo "Error: " . $stmt->error;
-        }
-
-        // Close the statement
-        $stmt->close();
-    } else {
-        echo "Booking Detail ID or Booking No is missing.";
-    }
+      // Delete from BOOKINGDETAILS
+      $sql = "DELETE FROM BOOKINGDETAILS WHERE booking_detail_id = $BookingDetailsNo"; 
+      if ($con->query($sql) === TRUE) {
+          // Delete from Traveler if the first query was successful
+          $sql1 = "DELETE FROM Traveler WHERE BookingNo = $BookingNo";
+          if ($con->query($sql1) === TRUE) {
+              $submitted = true; // Set to true on successful deletion
+          } else {
+              echo "Error deleting from Traveler: " . $con->error;
+          }
+      } else {
+          echo "Error deleting from BOOKINGDETAILS: " . $con->error;
+      }
+  } else {
+      echo "Booking Detail ID or Booking No is missing.";
+  }
 }
 
 // Close the database connection
