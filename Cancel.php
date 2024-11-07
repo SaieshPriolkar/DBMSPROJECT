@@ -7,7 +7,8 @@ $username = "root";
 $password = "";
 $dbname = "projectdbms";
 $con = new mysqli($servername, $username, $password, $dbname);
-$submitted=false;
+$submitted = false;
+
 if ($con->connect_error) {
     die("Connection failed: " . $con->connect_error);
 }
@@ -17,22 +18,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $BookingDetailsNo = $_POST['booking_detail_id'];
         $BookingNo = $_POST['BookingNo'];
 
-        $sql = "DELETE FROM BOOKINGDETAILS WHERE `booking_detail_id` = $BookingDetailsNo AND `BookingNo` = $BookingNo";
-        
+        // Prepare the SQL statement
+        $sql = "DELETE BOOKINGDETAILS 
+                FROM BOOKINGDETAILS 
+                NATURAL JOIN TRAVELER 
+                WHERE BOOKINGDETAILS.booking_detail_id = ? 
+                  AND Traveler.BookingNo = ?";
+
+        // Prepare the statement
+        $stmt = $con->prepare($sql);
+        if ($stmt === false) {
+            die("Error preparing statement: " . $con->error);
+        }
+
+        // Bind parameters (both should be integers)
+        $stmt->bind_param("ii", $BookingDetailsNo, $BookingNo);
+
         // Execute the query
-        
-if($con->query($sql) === TRUE){
-  $submitted = true; // Set to true on successful submission
-}
-else{
-  echo "Error: " . $sql . "<br>" . $con->error;
-}
-    } 
+        if ($stmt->execute()) {
+            $submitted = true; // Set to true on successful deletion
+        } else {
+            echo "Error: " . $stmt->error;
+        }
+
+        // Close the statement
+        $stmt->close();
+    } else {
+        echo "Booking Detail ID or Booking No is missing.";
+    }
 }
 
+// Close the database connection
 $con->close();
-
-
 ?>
 
 <!DOCTYPE html>
