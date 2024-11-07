@@ -44,14 +44,7 @@ else{
 }}
 
 $con->close();
-// LOGOUT CODE 
-// Check if the logout action has been requested
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['logout'])) {
-    session_unset(); // Clear all session variables
-    session_destroy(); // Destroy the session
-    header("Location: index.php"); // Redirect to homepage
-    exit();
-}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
